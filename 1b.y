@@ -7,13 +7,14 @@
 %left '+' '-'
 %left '*' '/'
 %%
-    expr: e { result = $1; }
+    expr: e { result = $1; } ;
     e: e'+'e { $$ = $1 + $3; }
     |e'-'e { $$ = $1 - $3; }
     |e'*'e { $$ = $1 * $3; }
     |e'/'e { $$ = $1 / $3; }
     |'('e')' { $$ = $2; }
     |NUM { $$ = $1; }
+    ;
 %%
 main() {
     printf("Type the expressinon ");
