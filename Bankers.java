@@ -1,96 +1,116 @@
-import java.util.Scanner;
-public class Bankers{
-     
-     
-    static int[][] calc_need(int need[][],int allocate[][],int max[][],int avail[][],int np,int nr){
-    	for(int i=0;i<np;i++)
-    	{	
-         for(int j=0;j<nr;j++)  //calculating need matrix
-        	 need[i][j]=max[i][j]-allocate[i][j];
-         System.out.println();
-    	}        
-       return need;
-    }
-  
-    static boolean check(int i, int avail[][], int need[][], int nr){
-       //checking if all resources for ith process can be allocated
-       for(int j=0;j<nr;j++) 
-       if(avail[0][j]<need[i][j])
-          return false;
-    
-    return true;
-    }
- 
-    public static void isSafe(int need[][],int allocate[][],int max[][],int avail[][],int np,int nr){
-       boolean done[]=new boolean[np];
-       int j=0;
- 
-       while(j<np){  //until all process allocated
-       boolean allocated=false;
-       for(int i=0;i<np;i++)
-        if(!done[i] && check(i, avail, need, nr)){  //trying to allocate
-            for(int k=0;k<nr;k++)
-            avail[0][k]=avail[0][k]-need[i][k]+max[i][k];
-         System.out.println("Allocated process : "+i);
-         allocated=done[i]=true;
-               j++;
-             }
-          if(!allocated) break;  //if no allocation
-       }
-       if(j==np)  //if all processes are allocated
-        System.out.println("\nSafely allocated");
-       else
-        System.out.println("All proceess cannot be allocated safely");
-    }
-    
-     
-    public static void main(String[] args) {
-    	int need[][],allocate[][],max[][],avail[][],np,nr;
-    	int need2[][],allocate2[][],max2[][],avail2[][];
-    	Scanner sc=new Scanner(System.in);
-        System.out.print("Enter no. of processes and resources : ");
-        np=sc.nextInt();  //no. of process
-        nr=sc.nextInt();  //no. of resources
-        need2 = need=new int[np][nr];  //initializing arrays
-        max2 = max =new int[np][nr];
-        allocate2 = allocate =new int[np][nr];
-        avail2 = new int[1][nr];
-        avail=new int[1][nr];
-         
-        System.out.println("Enter allocation matrix -->");
-        for(int i=0;i<np;i++)
-             for(int j=0;j<nr;j++)
-            	 allocate2[i][j] = allocate[i][j]=sc.nextInt();  //allocation matrix
-             
-          
-        System.out.println("Enter max matrix -->");
-        for(int i=0;i<np;i++)
-             for(int j=0;j<nr;j++)
-                max2[i][j] = max[i][j]=sc.nextInt();  //max matrix
-          
-        System.out.println("Enter available matrix -->");
-        for(int j=0;j<nr;j++)
-        	avail2[0][j] = avail[0][j]=sc.nextInt();  //available matrix
-            
-           
-       need = calc_need(need,allocate,max,avail,np,nr);
-    
-       isSafe(need,allocate,max,avail,np,nr);
-       
-       int n;
-   	System.out.println("Enter the process number that is requesting");  
-   	n = sc.nextInt();
-   	System.out.println("Enter the request");
-   	int req[] = new int[nr];
-   	for(int i = 0; i < nr; i++)
-   		req[i] = sc.nextInt();
-   	for(int i = 0; i < nr; i++)
-   	{
-   		avail2[0][i] -= req[i];
-   		allocate2[n][i] += req[i];
-   	}
-   	need2 = calc_need(need2,allocate2,max2,avail2,np,nr);
-   	isSafe(need2,allocate2,max2,avail2,np,nr);
-   	sc.close();
-    }
+public class Bankers {
+	static int n, m;
+	static int need[][];
+	static int work[];
+	static int sSequence[];
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the number of processes");
+		n = sc.nextInt();
+		int p[] = new int[n];
+		System.out.println("Enter the number of resource types");
+		m = sc.nextInt();
+		int avail[] = new int[n];
+		System.out.println("Enter the available instances of each resource type");
+		for (int i = 0; i < m; i++)
+			avail[i] = sc.nextInt();
+		int allocation[][] = new int[n][m];
+		System.out.println("Enter the number of instance of each resource allocated to each process");
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				allocation[i][j] = sc.nextInt();
+		System.out.println("Enter the maximum instances of each resource that can be allocated to each process");
+		int maximum[][] = new int[n][m];
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				maximum[i][j] = sc.nextInt();
+		boolean flag = isSafe(p, avail, allocation, maximum);
+		if (flag) {
+			System.out.println("System is in safe state.The safe sequence is");
+			for (int i = 0; i < n; i++)
+				System.out.println(sSequence[i]);
+		} else
+			System.out.println("System is not in safe state");
+		System.out.println("Enter the process number requesting for additional resources");
+		int pNo = sc.nextInt();
+		System.out.println("Enter the instances of each resource requested");
+		int rR[] = new int[m];
+		for (int i = 0; i < m; i++)
+			rR[i] = sc.nextInt();
+		resourceRequest(p, avail, allocation, maximum, pNo, rR);
+
+	}
+
+	private static void resourceRequest(int[] p, int[] avail, int[][] allocation, int[][] maximum, int pNo, int[] rR) {
+		int i;
+		for (i = 0; i < m; i++)
+			if (rR[i] > need[pNo][i])
+				break;
+		if (i == m) {
+			for (i = 0; i < m; i++)
+				if (rR[i] > work[i])
+					break;
+			if (i == m) {
+				for (int j = 0; j < m; j++) {
+					avail[j] -= rR[j];
+					allocation[pNo][j] += rR[j];
+				}
+				boolean flag = isSafe(p, avail, allocation, maximum);
+				if (flag) {
+					System.out.println(
+							"System is in safe state.Therefore the request can be granted.\nThe safe sequence is");
+					for (i = 0; i < n; i++)
+						System.out.println(sSequence[i]);
+				} else
+					System.out.println("System is not in safe state.Therefore request cannot be granted");
+			} else
+				System.out.println("Resources are not available at the moment");
+		} else {
+			System.out.println("The process has exceeded it's maximum claim");
+			System.exit(0);
+		}
+
+	}
+
+	private static boolean isSafe(int[] p, int[] avail, int[][] allocation, int[][] maximum) {
+		calculateNeed(maximum, allocation);
+		work = new int[m];
+		for (int i = 0; i < m; i++)
+			work[i] = avail[i];
+		int finish[] = new int[n];
+		sSequence = new int[n];
+		boolean found = false;
+		int j, count = 0;
+		while (count < n) {
+			found = false;
+			for (int i = 0; i < n; i++) {
+				if (finish[i] == 0) {
+					for (j = 0; j < m; j++)
+						if (need[i][j] > work[j])
+							break;
+					if (j == m) {
+						for (int k = 0; k < m; k++)
+							work[k] += allocation[i][k];
+						sSequence[count++] = i;
+						finish[i] = 1;
+						found = true;
+					}
+
+				}
+			}
+			if (!found) {
+				System.out.println("System is not in safe state");
+				break;
+			}
+		}
+		return found;
+	}
+
+	private static void calculateNeed(int maximum[][], int allocation[][]) {
+		need = new int[n][m];
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				need[i][j] = maximum[i][j] - allocation[i][j];
+	}
 }
