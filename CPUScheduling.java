@@ -1,8 +1,6 @@
-package calculator;
-
 import java.util.*;
 
-public class CPU_Scheduling {
+public class CPUScheduling {
 	static int wT[];
 	static int tAT[];
 	static int rem_bt[];
@@ -120,31 +118,20 @@ public class CPU_Scheduling {
 		int t = 0;
 		while (true) {
 			boolean done = true;
-
 			for (int i = 0; i < n; i++) {
-
 				if (rem_bt[i] > 0) {
 					done = false;
-
 					if (rem_bt[i] > quantum) {
-
 						t += quantum;
-
 						rem_bt[i] -= quantum;
-					}
-
-					else {
-
+					} else {
 						t += rem_bt[i];
-
 						wT[i] = t - burst_time[i];
-
 						rem_bt[i] = 0;
 						System.out.println("process " + processes[i] + " finishes at time " + t + " unit");
 					}
 				}
 			}
-
 			if (done)
 				break;
 		}
