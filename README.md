@@ -5,6 +5,7 @@ Practice repository for System Software and Operating System lab.
 
 ## Contributors
 
-[GautamKrish](https://github.com/GautamKrish) </br>
-[MadanKrishnan97](https://github.com/MadanKrishnan97) </br>
-[bapspatil](https://github.com/bapspatil) </br>
+[Gautam Krishnan](https://github.com/GautamKrish) </br>
+[Madan Krishan](https://github.com/MadanKrishnan97) </br>
+[Gouthami Shivaprakash](https://github.com/Gammys) </br>
+[Bapusaheb Patil](https://github.com/bapspatil) </br>
