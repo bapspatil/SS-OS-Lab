@@ -10,9 +10,9 @@
                     else
                         yyerror(); 
                 };
-    S: xB 
+    S: x B
         ;
-    x: Ax { count++; }
+    x: A x { count++; }
     |A { count++; }
 %%
 void main() {
