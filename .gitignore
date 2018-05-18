@@ -1,7 +1,4 @@
 lex.yy.c
 y.tab.c
-SJFP.class
-SJFNP.class
-Bankers.class
-RR.class
-CPUS.class
+y.tab.h
+a.out
