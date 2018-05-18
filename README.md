@@ -8,7 +8,7 @@ Practice repository for System Software and Operating System lab.
 <b>Lex</b></br>
 `lex filename.l` </br>
 `cc lex.yy.c -ll`</br>
-`./a.out`</br>
+`./a.out`</br></br>
 <b>Yacc</b></br>
 `lex filename.l` </br>
 `yacc -d filename.y` </br>
