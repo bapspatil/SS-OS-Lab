@@ -51,7 +51,7 @@ void check() {
 				flag = 1;
 				printf("\n $%s\t\t%s$\t\tE->T", stack, ip_sym);
 			}
-		//Isn't this if condition the sexiest thing you have ever seen?!
+
 		if ((stack[st_ptr] == 'T' && ip_sym[ip_ptr] == '*') ||
 			(stack[st_ptr] == 'E' && ip_sym[ip_ptr] == ')') ||
 			(stack[st_ptr] == 'E' && ip_sym[ip_ptr] == '+') ||
