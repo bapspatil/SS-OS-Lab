@@ -6,22 +6,28 @@
 %token A B
 %%
     str: S '\n' {   if(n == count)
-                        printf("Valid");
+                        printf("Valid string\n");
                     else
-                        yyerror(); 
-                };
+                        yyerror();
+                    return 0; 
+                }
+        ;
     S: x B
         ;
     x: A x { count++; }
-    |A { count++; }
+        | A { count++; }
+        |
+        ;
 %%
 void main() {
     printf("Enter n: ");
     scanf("%d", &n);
-    printf("Enter string: ");
+    printf("Enter string where there are 'n' a's: ");
+    yylex();
     yyparse();
 }
 yyerror() {
-    printf("Invalid string");
+    printf("Invalid string\n");
+    exit(0);
 }
     
