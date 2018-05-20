@@ -81,13 +81,13 @@ void main()
             case '+':
                 printf("\nLoad R2,%s \n", op1);
                 printf("Load R3,%s \n", op2);
-                printf("ADD R1,R1,R2\n");
+                printf("ADD R1,R2,R3\n");
                 printf("STORE %s,R1\n", res);
                 break;
             case '-':
                 printf("\nLoad R2,%s \n", op1);
                 printf("Load R3,%s \n", op2);
-                printf("SUB R1,R1,R2\n");
+                printf("SUB R1,R3,R2\n");
                 printf("STORE %s,R1\n", res);
             default:
                 printf("\ninvalid statement\n");
