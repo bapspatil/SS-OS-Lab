@@ -69,7 +69,7 @@ void check()
                        stack[top]='E';
                        printfn();
                }
-                else if(stack[top]=='E' || stack[top]=='*' || stack[top]=='+' || stack[top]=='(')
+                else if(stack[top]=='E' || stack[top]=='*' || stack[top]=='+' || stack[top]=='(' || stack[top]==')')
                 {
                         break;
                 }              
