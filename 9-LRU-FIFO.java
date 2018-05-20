@@ -83,6 +83,7 @@ public class LRU {
 
 // FIFO
 import java.io.*;
+import java.util.Scanner;
 
 class FIFO {
     public static void main(String args[]) throws IOException {
@@ -92,9 +93,10 @@ class FIFO {
         System.out.println("Enter the number of inputs :");
         n = Integer.parseInt(br.readLine());
         int inp[] = new int[n];
+        Scanner sc = new Scanner(System.in);
         System.out.println("Enter the inputs:");
         for (int i = 0; i < n; i++)
-            inp[i] = Integer.parseInt(br.readLine());
+            inp[i] = sc.nextInt();
         System.out.println("—————");
         for (int i = 0; i < 3; i++)
             fifo[i] = -1;
@@ -116,6 +118,9 @@ class FIFO {
                     j = 0;
                 Fault = Fault + 1;
             }
+            for(int k=0;k<3;k++)
+            	System.out.print(fifo[k]);
+            System.out.println();
         }
         System.out.println(" FAULT:" + Fault);
     }
