@@ -1,144 +1,101 @@
 import java.util.*;
 
 public class CPUScheduling {
-	static int wT[];
-	static int tAT[];
-	static int rem_bt[];
-	static int processes[];
-
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int n, burst_time[];
-		System.out.println("Enter the number of processes");
-		n = sc.nextInt();
-		burst_time = new int[n];
-		wT = new int[n];
-		tAT = new int[n];
-		rem_bt = new int[n];
-		processes = new int[n];
-		System.out.println("Enter the burst time of each process");
-		for (int i = 0; i < n; i++) {
-			burst_time[i] = sc.nextInt();
-			rem_bt[i] = burst_time[i];
-			processes[i] = i + 1;
-		}
-		System.out.println("Select the scheduling algorithm");
-		System.out.print("1.Round Robin\n2.Non Premptive SJF \n3.Premptive SJF\n");
-		int ch = sc.nextInt();
-		switch (ch) {
-		case 1:
-			System.out.println("Enter the quantum time");
-			int quantum = sc.nextInt();
-			findRRWaitingTime(n, burst_time, quantum);
-			break;
-		case 2:
+	public static void sjf(int n, int bt[], int at[]) {
+		int count = 0, small = 0;
+		int rt[] = new int[n];
+		float time, endtime, wt = 0, tat = 0;
+		for (int i = 0; i < n; i++)
+			rt[i ] = bt[i];
+		System.out.println("Process\tBurst Time\tArrival Time\tWaiting Time\tTurn Around Time");
+		for (time = 0; count != n; time++) {
+			int val = 999;
 			for (int i = 0; i < n; i++)
-				processes[i] = i + 1;
-			for (int i = 0; i < n - 1; i++) {
-				int min_index = i;
-				for (int j = i + 1; j < n; j++) {
-					if (burst_time[j] < burst_time[min_index]) {
-						min_index = j;
-					}
+				if (rt[i] < val && rt[i] > 0 && at[i] <= time) {
+					val = rt[i];
+					small = i;
 				}
-				int temp = burst_time[min_index];
-				burst_time[min_index] = burst_time[i];
-				burst_time[i] = temp;
-
-				temp = processes[min_index];
-				processes[min_index] = processes[i];
-				processes[i] = temp;
-			}
-
-			findSJFNPWaitingTime(n, burst_time);
-			break;
-		case 3:
-			int arrival_time[] = new int[n];
-			System.out.println("Enter the arrival time of each process");
-			for (int i = 0; i < n; i++)
-				arrival_time[i] = sc.nextInt();
-			findSJFPWaitingTime(n, burst_time, arrival_time);
-			break;
-		default:
-			System.out.println("Invalid choice");
-
-		}
-		findTurnAroundTime(n, burst_time);
-		findAverageWaTATime(n, burst_time);
-		sc.close();
-	}
-
-	private static void findAverageWaTATime(int n, int[] burst_time) {
-		int total_wt = 0, total_tat = 0;
-		for (int i = 0; i < n; i++) {
-			total_wt = total_wt + wT[i];
-			total_tat = total_tat + tAT[i];
-		}
-		System.out.println("\nAverage waiting time = " + (float) total_wt / n);
-		System.out.println("Average turn around time = " + (float) total_tat / n);
-	}
-
-	private static void findSJFPWaitingTime(int n, int[] burst_time, int[] arrival_time) {
-		int count = 0, t = 0, min = Integer.MAX_VALUE, min_index = 0;
-		while (count != n) {
-			for (int i = 0; i < n; i++) {
-				if ((arrival_time[i] <= t) && (rem_bt[i] < min) && (rem_bt[i] > 0)) {
-					min = rem_bt[i];
-					min_index = i;
-				}
-			}
-			rem_bt[min_index] -= 1;
-			min = rem_bt[min_index];
-			if (min == 0)
-				min = Integer.MAX_VALUE;
-			if (rem_bt[min_index] == 0) {
+			rt[small]--;
+			if (rt[small] == 0) {
 				count++;
-				wT[min_index] = t + 1 - arrival_time[min_index] - burst_time[min_index];
-				System.out.println("process " + processes[min_index] + " finishes at " + (t + 1) + " unit");
-				if (wT[min_index] < 0)
-					wT[min_index] = 0;
+				endtime = time + 1;
+				System.out.println((small + 1) + "\t" + bt[small] + "\t\t" + at[small] + "\t\t" + (endtime - at[small] - bt[small]) + "\t\t" + (endtime - at[small]));
+				wt += (endtime  - at[small] - bt[small]);
+				tat += (endtime - at[small]);
 			}
-			t++;
 		}
-
+		System.out.println("Avg waiting time = " + (float) wt / n);
+		System.out.println("Average turnaround time  = " + (float) tat / n);
 	}
-
-	private static void findSJFNPWaitingTime(int n, int[] burst_time) {
-		wT[0] = 0;
-		int totalWT = 0;
-		System.out.println("process " + processes[0] + " finishes at " + burst_time[0] + " unit");
-		for (int i = 1; i < n; i++) {
-			totalWT += burst_time[i - 1];
-			wT[i] = totalWT;
-			System.out.println("process " + processes[i] + " finishes at " + (wT[i] + burst_time[i]) + " unit");
-		}
-	}
-
-	private static void findRRWaitingTime(int n, int[] burst_time, int quantum) {
-		int t = 0;
-		while (true) {
-			boolean done = true;
+	
+	public static void findWT(int n, int bt[], int wt[], int q) {
+		int time = 0;
+		int rembt[] = new int[n];
+		for (int i = 0; i < n; i++)
+			rembt[i] = bt[i];
+		while(true) {
+			boolean done  = true;
 			for (int i = 0; i < n; i++) {
-				if (rem_bt[i] > 0) {
-					done = false;
-					if (rem_bt[i] > quantum) {
-						t += quantum;
-						rem_bt[i] -= quantum;
-					} else {
-						t += rem_bt[i];
-						wT[i] = t - burst_time[i];
-						rem_bt[i] = 0;
-						System.out.println("process " + processes[i] + " finishes at time " + t + " unit");
+				if (rembt[i] > 0) {
+					done  = false;
+					if (rembt[i] > q) {
+						rembt[i] -= q;
+						time += q;
+					}
+					else {
+						time += rembt[i];
+						wt[i] = time - bt[i];
+						rembt[i] = 0;
 					}
 				}
 			}
-			if (done)
+			if (done == true) 
 				break;
 		}
 	}
-
-	private static void findTurnAroundTime(int n, int bt[]) {
-		for (int i = 0; i < n; i++)
-			tAT[i] = bt[i] + wT[i];
+	
+	public static void rr(int n, int bt[], int q) {
+		int wt[] = new int[n];
+		int totalwt = 0, totaltat = 0;
+		findWT (n, bt, wt, q);
+		System.out.println("Process\tBurst Time\tWaiting Time\tTurnaround Time");
+		for(int i = 0; i < n; i++) {
+			totalwt += wt[i];
+			totaltat += wt[i] + bt[i];
+			System.out.println((i + 1) + "\t" + bt[i] + "\t\t" + wt[i] + "\t\t" + (wt[i] + bt[i]));
+		}
+		System.out.println("Avg waiting time  = " + (float) totalwt / n);
+		System.out.println("Avg turnaround time = " + (float) totaltat / n);
+	}
+	
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter number of processes: ");
+		int n = scan.nextInt();
+		int bt[] = new int[n];
+		System.out.println("Enter the burst time of each process:");
+		for (int i = 0; i < n; i++) {
+			System.out.print("p[" + (i + 1) + "]: ");
+			bt[i] = scan.nextInt();
+		}
+		System.out.println("Enter 1 for SJF\nEnter 2 for Round Robin");
+		int choice = scan.nextInt();
+		if (choice == 1) {
+			System.out.println("Enter the arrival time of each process: ");
+			int at[] = new int[n];
+			for (int i = 0; i < n; i++) {
+				System.out.print("p[" + (i + 1) + "]: ");
+				at[i] = scan.nextInt();
+			}
+			sjf(n, bt, at);
+		}
+		else if (choice == 2) {
+			System.out.println("Enter the time quantam:");
+			int q = scan.nextInt();
+			rr(n, bt, q);
+		}
+		else
+			System.out.println("Invalid choice");
+		scan.close();
 	}
 }
