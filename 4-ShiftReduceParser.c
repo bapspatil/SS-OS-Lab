@@ -22,7 +22,7 @@ void check() {
 			stack[st_ptr - 1] = '\0';
 			flag = 1;
 			st_ptr = st_ptr - 2;
-			printf("\n $%s\t\t%s$\t\tF->id", stack, ip_sym);
+			printf("\n $%s\t\t%s$\t\tF->(E)", stack, ip_sym);
 		}
 		if (stack[st_ptr] == 'F' && stack[st_ptr - 1] == '*' && stack[st_ptr - 2] == 'T') {
 			// stack[st_ptr-2]='T';
