@@ -17,13 +17,13 @@
     ;
 %%
 main() {
-    printf("Type the expressinon ");
+    printf("Type the expression: ");
     if(!yyparse()) {
-        printf("Result: %d", result);
-        printf("Valid expression");
+        printf("Result: %d\n", result);
+        printf("\nValid expression\n\n");
     }
 }
 yyerror() {
-    printf("Invalid expression");
+    printf("\nInvalid expression\n\n");
     exit(0);
 }
