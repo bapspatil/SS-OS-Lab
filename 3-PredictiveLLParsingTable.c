@@ -57,13 +57,15 @@ int main() {
 	strcpy(table[1][0], "A");
 	strcpy(table[2][0], "B");
 
+	// USE THIS IF THE for LOOP IS TOO COMPLEX
+	// strcpy(table[1][1], prod[0]);
+	// strcpy(table[2][1], prod[2]);
+	// strcpy(table[2][2], prod[1]);
 	for (i = 0; i < 3; i++) {
-		k = strlen(first[i]);
-		for (j = 0; j < k; j++)
-			if (first[i][j] != '@')
-				strcpy(table[numr(prod[i][0])][numr(first[i][j])], prod[i]);
-			else
-				strcpy(table[numr(prod[i][0])][numr(follow[i][j])], prod[i]);
+		if (first[i][0] != '@')
+			strcpy(table[numr(prod[i][0])][numr(first[i][0])], prod[i]);
+		else
+			strcpy(table[numr(prod[i][0])][numr(follow[i][0])], prod[i]);
 	}
 	printf("\n--------------------------------------------------------\n");
 
