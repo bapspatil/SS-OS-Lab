@@ -10,4 +10,9 @@ LRU.java
 LRU.class
 FIFO.java
 FIFO.class
-
+SimplerRR.java
+SimplerRR.class
+SimplerSJF.java
+SimplerSJF.class
+SimplerBankers.java
+SimplerBankers.class
