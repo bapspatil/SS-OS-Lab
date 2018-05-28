@@ -7,8 +7,10 @@ public class LRU {
         int minimum = counter[0];
         int pos = 0;
         for(int i=0;i<nFrames;i++) 
-            if(minimum > counter[i])
+            if(minimum > counter[i]) {
+                minimum = counter[i];
                 pos = i;
+            }
         return pos;   
     }
     
